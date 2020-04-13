@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Content from '../views/Content.vue'
 import Publish from '../views/Publish.vue'
+import Login from '../views/Login.vue'
+import Register from '../views/Register.vue'
 
 Vue.use(VueRouter)
 
@@ -13,14 +15,24 @@ Vue.use(VueRouter)
     component: Home
   },
   {
-    path: '/b',
-    name: 'b',
+    path: '/content',
+    name: 'Content',
     component: Content
   },
   {
     path: '/publish',
     name: 'Publish',
     component: Publish
+  },
+  {
+    path: '/login',
+    name:"/Login",
+    component: Login
+  },
+  {
+    path: '/register',
+    name:"/Register",
+    component: Register
   }
 ]
 
