@@ -1,15 +1,23 @@
-package config
+package settings
 
 import (
+	"fmt"
+
+	"github.com/spf13/viper"
 	"gopkg.in/ini.v1"
 )
 
 var Conf = new(AppConfig)
 
 type AppConfig struct {
-	*LogConfig   `json:"log" ini:"log"`
-	*MySQLConfig `json:"mysql" ini:"mysql"`
-	*RedisConfig `json:"redis" ini:"redis"`
+	*ServerConfig `json:"server" ini:"server"`
+	*LogConfig    `json:"log" ini:"log"`
+	*MySQLConfig  `json:"mysql" ini:"mysql"`
+	*RedisConfig  `json:"redis" ini:"redis"`
+}
+
+type ServerConfig struct {
+	Port int `json:"port" ini:"port"`
 }
 
 type MySQLConfig struct {
@@ -39,4 +47,15 @@ type LogConfig struct {
 
 func LoadFromFile(cfgFile string) (err error) {
 	return ini.MapTo(Conf, cfgFile)
+}
+
+func Init() error {
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath("./conf/")
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+	}
+	return err
 }

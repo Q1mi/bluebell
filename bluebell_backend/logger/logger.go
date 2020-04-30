@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"bluebell_backend/config"
+	"bluebell_backend/settings"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -19,7 +19,7 @@ import (
 var lg *zap.Logger
 
 // Init 初始化lg
-func Init(cfg *config.LogConfig) (err error) {
+func Init(cfg *settings.LogConfig) (err error) {
 	writeSyncer := getLogWriter(cfg.Filename, cfg.MaxSize, cfg.MaxBackups, cfg.MaxAge)
 	encoder := getEncoder()
 	var l = new(zapcore.Level)
@@ -120,4 +120,24 @@ func GinRecovery(stack bool) gin.HandlerFunc {
 		}()
 		c.Next()
 	}
+}
+
+func Debug(msg string, fields ...zap.Field) {
+	lg.Debug(msg, fields...)
+}
+
+func Info(msg string, fields ...zap.Field) {
+	lg.Info(msg, fields...)
+}
+
+func Warn(msg string, fields ...zap.Field) {
+	lg.Warn(msg, fields...)
+}
+
+func Error(msg string, fields ...zap.Field) {
+	lg.Error(msg, fields...)
+}
+
+func With(fields ...zap.Field) *zap.Logger {
+	return lg.With(fields...)
 }

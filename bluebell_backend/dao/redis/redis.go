@@ -1,7 +1,7 @@
 package redis
 
 import (
-	"bluebell_backend/config"
+	"bluebell_backend/settings"
 	"fmt"
 
 	"github.com/go-redis/redis"
@@ -16,7 +16,7 @@ type SliceCmd = redis.SliceCmd
 type StringStringMapCmd = redis.StringStringMapCmd
 
 // Init 初始化连接
-func Init(cfg *config.RedisConfig) (err error) {
+func Init(cfg *settings.RedisConfig) (err error) {
 	Client = redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),
 		Password: cfg.Password, // no password set

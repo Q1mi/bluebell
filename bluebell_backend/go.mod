@@ -12,6 +12,7 @@ require (
 	github.com/onsi/ginkgo v1.12.0 // indirect
 	github.com/onsi/gomega v1.9.0 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
+	github.com/spf13/viper v1.6.3 // indirect
 	go.uber.org/zap v1.14.1
 	google.golang.org/appengine v1.6.5 // indirect
 	gopkg.in/ini.v1 v1.55.0
