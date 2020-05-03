@@ -1,7 +1,14 @@
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(20) DEFAULT '' COMMENT '用户名',
-  `password` varchar(80) DEFAULT '' COMMENT '密码',
-  `created_on` int(10) unsigned DEFAULT '0' COMMENT '创建时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `user_id` bigint(20) NOT NULL,
+    `username` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+    `password` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+    `email` varchar(64) COLLATE utf8mb4_general_ci,
+    `gender` tinyint(4) NOT NULL DEFAULT '0',
+    `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_username` (`username`) USING BTREE,
+    UNIQUE KEY `idx_user_id` (`user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

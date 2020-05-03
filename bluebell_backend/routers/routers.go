@@ -13,6 +13,8 @@ func SetupRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 	r.POST("/auth", controller.JWTHandler)
+	r.POST("/login", controller.LoginHandler)
+	r.POST("/register", controller.RegisterHandler)
 	v1 := r.Group("/api/v1")
 	{
 		v1.POST("/", controller.IndexHandler)

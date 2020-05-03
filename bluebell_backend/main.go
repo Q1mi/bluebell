@@ -4,6 +4,7 @@ import (
 	"bluebell_backend/dao/mysql"
 	"bluebell_backend/dao/redis"
 	"bluebell_backend/logger"
+	"bluebell_backend/pkg/gen_id"
 	"bluebell_backend/routers"
 	"bluebell_backend/settings"
 	"flag"
@@ -33,6 +34,10 @@ func main() {
 		return
 	}
 	defer redis.Close()
+	if err := gen_id.Init(1); err != nil {
+		fmt.Printf("init gen_id failed, err:%v\n", err)
+		return
+	}
 	// 注册路由
 	r := routers.SetupRouter()
 	err := r.Run(fmt.Sprintf(":%d", settings.Conf.ServerConfig.Port))

@@ -21,6 +21,15 @@ func ResponseError(ctx *gin.Context, code int) {
 	ctx.JSON(http.StatusOK, rd)
 }
 
+func ResponseErrorWithMsg(ctx *gin.Context, code int, errMsg string) {
+	rd := &ResponseData{
+		Code:    code,
+		Message: errMsg,
+		Data:    nil,
+	}
+	ctx.JSON(http.StatusOK, rd)
+}
+
 func ResponseSuccess(ctx *gin.Context, data interface{}) {
 	rd := &ResponseData{
 		Code:    CodeSuccess,

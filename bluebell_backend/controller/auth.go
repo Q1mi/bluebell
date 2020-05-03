@@ -1,8 +1,11 @@
 package controller
 
 import (
+	"bluebell_backend/dao/mysql"
 	"bluebell_backend/models"
 	"bluebell_backend/utils"
+	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -30,17 +33,60 @@ func JWTHandler(c *gin.Context) {
 	return
 }
 
-func LoginHandler(c *gin.Context) {
-	var u models.User
-	if err := c.ShouldBind(&u); err != nil {
+func RegisterHandler(c *gin.Context) {
+	// 1.获取请求参数
+	var fo models.RegisterForm
+	if err := c.ShouldBind(&fo); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": CodeSuccess,
 			"msg":  GetMsg(CodeSuccess),
 		})
 		return
 	}
-	// check username & password
-	if u.PasswordValid() {
-
+	// 2.校验数据有效性
+	if ok, errMsg := fo.Validate(); !ok {
+		c.JSON(http.StatusOK, gin.H{
+			"code": CodeInvalidParams,
+			"msg":  errMsg,
+		})
+		return
 	}
+	// 3.注册用户
+	err := mysql.Register(&models.User{
+		UserName: fo.UserName,
+		Password: fo.Password,
+	})
+	if errors.Is(err, mysql.ErrorUserExit) {
+		ResponseError(c, CodeUserExist)
+		return
+	}
+	if err != nil {
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, nil)
+}
+
+func LoginHandler(c *gin.Context) {
+	var u models.User
+	if err := c.BindJSON(&u); err != nil {
+		fmt.Println(err)
+		ResponseError(c, CodeInvalidParams)
+		return
+	}
+	if ok, errMsg := u.LoginValidate(); !ok {
+		fmt.Println(errMsg)
+		ResponseErrorWithMsg(c, CodeInvalidParams, errMsg)
+		return
+	}
+	if err := mysql.Login(&u); err != nil {
+		fmt.Println(err)
+		ResponseError(c, CodeInvalidPassword)
+		return
+	}
+	ResponseSuccess(c, nil)
+}
+
+func Send(value interface{}) {
+	ch <- value
 }
