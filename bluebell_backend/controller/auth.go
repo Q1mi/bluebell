@@ -1,92 +1,70 @@
 package controller
 
 import (
-	"bluebell_backend/dao/mysql"
-	"bluebell_backend/models"
 	"bluebell_backend/utils"
 	"errors"
-	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
-func JWTHandler(c *gin.Context) {
-	// 用户发送用户名和密码过来
-	var user models.User
-	err := c.BindJSON(&user)
-	if err != nil {
-		ResponseError(c, CodeInvalidParams)
+const (
+	ContextUserIDKey = "userID"
+)
+
+var (
+	ErrorUserNotLogin = errors.New("当前用户未登录")
+)
+
+// JWTAuthMiddleware 基于JWT的认证中间件
+func JWTAuthMiddleware() func(c *gin.Context) {
+	return func(c *gin.Context) {
+		// 客户端携带Token有三种方式 1.放在请求头 2.放在请求体 3.放在URI
+		// 这里假设Token放在Header的Authorization中，并使用Bearer开头
+		// 这里的具体实现方式要依据你的实际业务情况决定
+		authHeader := c.Request.Header.Get("Authorization")
+		if authHeader == "" {
+			c.JSON(http.StatusOK, gin.H{
+				"code": 2003,
+				"msg":  "请求头中auth为空",
+			})
+			c.Abort()
+			return
+		}
+		// 按空格分割
+		parts := strings.SplitN(authHeader, " ", 2)
+		if !(len(parts) == 2 && parts[0] == "Bearer") {
+			c.JSON(http.StatusOK, gin.H{
+				"code": 2004,
+				"msg":  "请求头中auth格式有误",
+			})
+			c.Abort()
+			return
+		}
+		// parts[1]是获取到的tokenString，我们使用之前定义好的解析JWT的函数来解析它
+		mc, err := utils.ParseToken(parts[1])
+		if err != nil {
+			ResponseError(c, CodeInvalidToken)
+			c.Abort()
+			return
+		}
+		// 将当前请求的username信息保存到请求的上下文c上
+		c.Set(ContextUserIDKey, mc.UserID)
+		c.Next() // 后续的处理函数可以用过c.Get("userID")来获取当前请求的用户信息
+	}
+}
+
+func GetCurrentUserID(c *gin.Context) (userID uint64, err error) {
+	_userID, ok := c.Get(ContextUserIDKey)
+	if !ok {
+		err = ErrorUserNotLogin
 		return
 	}
-	// 校验用户名和密码是否正确
-	if user.UserName == "q1mi" && user.Password == "q1mi123" {
-		// 生成Token
-		tokenString, _ := utils.GenToken(user.UserName)
-		ResponseSuccess(c, tokenString)
+	userID, ok = _userID.(uint64)
+	if !ok {
+		err = ErrorUserNotLogin
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"code": 2002,
-		"msg":  "鉴权失败",
-	})
 	return
-}
-
-func RegisterHandler(c *gin.Context) {
-	// 1.获取请求参数
-	var fo models.RegisterForm
-	if err := c.ShouldBind(&fo); err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code": CodeSuccess,
-			"msg":  GetMsg(CodeSuccess),
-		})
-		return
-	}
-	// 2.校验数据有效性
-	if ok, errMsg := fo.Validate(); !ok {
-		c.JSON(http.StatusOK, gin.H{
-			"code": CodeInvalidParams,
-			"msg":  errMsg,
-		})
-		return
-	}
-	// 3.注册用户
-	err := mysql.Register(&models.User{
-		UserName: fo.UserName,
-		Password: fo.Password,
-	})
-	if errors.Is(err, mysql.ErrorUserExit) {
-		ResponseError(c, CodeUserExist)
-		return
-	}
-	if err != nil {
-		ResponseError(c, CodeServerBusy)
-		return
-	}
-	ResponseSuccess(c, nil)
-}
-
-func LoginHandler(c *gin.Context) {
-	var u models.User
-	if err := c.BindJSON(&u); err != nil {
-		fmt.Println(err)
-		ResponseError(c, CodeInvalidParams)
-		return
-	}
-	if ok, errMsg := u.LoginValidate(); !ok {
-		fmt.Println(errMsg)
-		ResponseErrorWithMsg(c, CodeInvalidParams, errMsg)
-		return
-	}
-	if err := mysql.Login(&u); err != nil {
-		fmt.Println(err)
-		ResponseError(c, CodeInvalidPassword)
-		return
-	}
-	ResponseSuccess(c, nil)
-}
-
-func Send(value interface{}) {
-	ch <- value
 }
