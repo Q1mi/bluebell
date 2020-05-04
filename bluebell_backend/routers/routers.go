@@ -22,6 +22,10 @@ func SetupRouter() *gin.Engine {
 		v1.POST("/post", controller.PostHandler)
 		v1.GET("/post/:id", controller.PostDetailHandler)
 		v1.GET("/post", controller.PostListHandler)
+
+		v1.POST("/comment", controller.CommentHandler)
+		v1.GET("/comment", controller.CommentListHandler)
+
 	}
 
 	r.GET("/ping", func(c *gin.Context) {

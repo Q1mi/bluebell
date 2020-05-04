@@ -44,7 +44,7 @@ func GetPostByID(idStr string) (post *models.ApiPostDetail, err error) {
 	return
 }
 
-func GetPostListByIDs(ids []string) (posts []*models.Post, err error) {
+func GetPostListByIDs(ids []string) (postList []*models.Post, err error) {
 	sqlStr := `select post_id, caption, content, author_id, community_id, create_time
 	from post
 	where post_id in (?)`
@@ -55,6 +55,6 @@ func GetPostListByIDs(ids []string) (posts []*models.Post, err error) {
 	}
 	// sqlx.In 返回带 `?` bindvar的查询语句, 我们使用Rebind()重新绑定它
 	query = db.Rebind(query)
-	err = db.Select(&posts, query, args...)
+	err = db.Select(&postList, query, args...)
 	return
 }

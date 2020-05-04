@@ -1,35 +1,45 @@
-FROM golang:alpine
+FROM golang:alpine AS builder
 
-# Set necessary environmet variables needed for our image
+# 为我们的镜像设置必要的环境变量
 ENV GO111MODULE=on \
-    CGO_ENABLED=0 \
-    GOOS=linux \
-    GOARCH=amd64
+CGO_ENABLED=0 \
+GOOS=linux \
+GOARCH=amd64
 
-# Move to working directory /build
+# 移动到工作目录：/build
 WORKDIR /build
 
-# Copy and download dependency using go mod
+# 复制项目中的 go.mod 和 go.sum文件并下载依赖信息
 COPY go.mod .
 COPY go.sum .
 RUN go mod download
 
-# Copy the code into the container
+# 将代码复制到容器中
 COPY . .
 
-# Build the application
-RUN go build -o main .
+# 将我们的代码编译成二进制可执行文件 bubble
+RUN go build -o bluebell .
 
-# Move to /dist directory as the place for resulting binary folder
-WORKDIR /dist
+###################
+# 接下来创建一个小镜像
+###################
+FROM debian:stretch-slim
 
-# Copy binary from build to main folder
-RUN cp /build/main .
-RUN mkdir conf
-RUN cp /build/conf/bluebell.ini conf/bluebell.ini
+COPY ./wait-for.sh /
+COPY ./templates /templates
+COPY ./static /static
+COPY ./conf /conf
 
-# Export necessary port
-EXPOSE 8123
 
-# Command to run when starting the container
-CMD ["/dist/main /dist/conf/bluebell.ini"]
+# 从builder镜像中把/dist/app 拷贝到当前目录
+COPY --from=builder /build/bluebell /
+
+RUN set -eux; \
+apt-get update; \
+apt-get install -y \
+--no-install-recommends \
+netcat; \
+chmod 755 wait-for.sh
+
+# 需要运行的命令
+# ENTRYPOINT ["/bluebell", "conf/config.ini"]
