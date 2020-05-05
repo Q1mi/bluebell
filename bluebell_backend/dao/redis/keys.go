@@ -5,10 +5,11 @@ package redis
 */
 
 const (
-	KeyArticleInfoHashFormat = "bluebell:article:%d"
-	KeyArticleTimeZSet       = "bluebell:article:time"
-	KeyArticleScoreZSet      = "bluebell:article:score"
-	KeyArticleVotedSetFormat = "bluebell:article:voted:%d"
+	KeyPostInfoHashPrefix     = "bluebell:post:"
+	KeyPostTimeZSet           = "bluebell:post:time"
+	KeyPostScoreZSet          = "bluebell:post:score"
+	KeyPostVotedUpSetPrefix   = "bluebell:post:voted:down:"
+	KeyPostVotedDownSetPrefix = "bluebell:post:voted:up:"
 
-	KeyCommunitySetFormat = "bluebell:community:%s"
+	KeyCommunityPostSetPrefix = "bluebell:community:"
 )
