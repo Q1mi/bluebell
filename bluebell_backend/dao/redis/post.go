@@ -98,7 +98,11 @@ func CreatePost(postID, userID, title, summary, communityName string) (err error
 }
 
 // GetPost 从key中分页取出帖子
-func GetPost(key string, page int64) []map[string]string {
+func GetPost(order string, page int64) []map[string]string {
+	key := KeyPostScoreZSet
+	if order == "time" {
+		key = KeyPostTimeZSet
+	}
 	start := (page - 1) * PostPerAge
 	end := start + PostPerAge - 1
 	ids := client.ZRevRange(key, start, end).Val()

@@ -2,11 +2,13 @@ package controller
 
 import (
 	"bluebell_backend/dao/mysql"
+	"bluebell_backend/logger"
 	"bluebell_backend/models"
 	"bluebell_backend/utils"
 	"errors"
 	"fmt"
-	"net/http"
+
+	"go.uber.org/zap"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,10 +17,7 @@ func RegisterHandler(c *gin.Context) {
 	// 1.获取请求参数
 	var fo models.RegisterForm
 	if err := c.ShouldBind(&fo); err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code": CodeSuccess,
-			"msg":  CodeSuccess.Msg(),
-		})
+		ResponseError(c, CodeInvalidParams)
 		return
 	}
 	// 2.校验数据有效性
@@ -36,6 +35,7 @@ func RegisterHandler(c *gin.Context) {
 		return
 	}
 	if err != nil {
+		logger.Error("mysql.Register() failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
 		return
 	}

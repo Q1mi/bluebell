@@ -2,10 +2,13 @@ package controller
 
 import (
 	"bluebell_backend/dao/mysql"
+	"bluebell_backend/dao/redis"
 	"bluebell_backend/logger"
 	"bluebell_backend/models"
 	"bluebell_backend/pkg/gen_id"
+	"bluebell_backend/utils"
 	"fmt"
+	"strconv"
 
 	"go.uber.org/zap"
 
@@ -13,10 +16,13 @@ import (
 )
 
 // PostHandler 创建帖子
-func PostHandler(c *gin.Context) {
+func CreatePostHandler(c *gin.Context) {
 	var post models.Post
-	if err := c.BindJSON(&post); err != nil {
-		fmt.Println(err)
+	if err := c.ShouldBindJSON(&post); err != nil {
+		ResponseError(c, CodeInvalidParams)
+		return
+	}
+	if !post.Valid() {
 		ResponseError(c, CodeInvalidParams)
 		return
 	}
@@ -43,21 +49,36 @@ func PostHandler(c *gin.Context) {
 		ResponseError(c, CodeServerBusy)
 		return
 	}
+	community, err := mysql.GetCommunityNameByID(fmt.Sprint(post.CommunityID))
+	if err != nil {
+		logger.Error("mysql.GetCommunityNameByID failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	if err := redis.CreatePost(
+		fmt.Sprint(post.PostID),
+		fmt.Sprint(post.AuthorId),
+		post.Caption, utils.TruncateByWords(post.Content, 120),
+		community.CommunityName); err != nil {
+		logger.Error("redis.CreatePost failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
 	ResponseSuccess(c, nil)
 }
 
 // PostListHandler 帖子列表
 func PostListHandler(c *gin.Context) {
-	ids, ok := c.GetQueryArray("ids")
+	order, _ := c.GetQuery("order")
+	pageStr, ok := c.GetQuery("page")
 	if !ok {
-		ResponseError(c, CodeInvalidParams)
-		return
+		pageStr = "1"
 	}
-	posts, err := mysql.GetPostListByIDs(ids)
+	pageNum, err := strconv.ParseInt(pageStr, 10, 64)
 	if err != nil {
-		ResponseError(c, CodeServerBusy)
-		return
+		pageNum = 1
 	}
+	posts := redis.GetPost(order, pageNum)
 	ResponseSuccess(c, posts)
 }
 

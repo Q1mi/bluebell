@@ -17,3 +17,10 @@ type ApiPostDetail struct {
 	AuthorName    string `json:"author_name"`
 	CommunityName string `json:"community_name"`
 }
+
+func (p *Post) Valid() bool {
+	if len(p.Caption) == 0 || len(p.Content) == 0 || p.CommunityID == 0 {
+		return false
+	}
+	return true
+}
