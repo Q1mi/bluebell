@@ -15,24 +15,25 @@
         </div>
       </div>
       <ul class="c-l-list">
-        <li class="c-l-item">
+        <li class="c-l-item" v-for="post in postList" :key="post.id">
           <div class="post">
             <a class="vote">
               <span class="iconfont icon-up"></span>
             </a>
-            <span class="text">502</span>
+            <span class="text">{{post.votes}}</span>
             <a class="vote">
               <span class="iconfont icon-down"></span>
             </a>
           </div>
           <div class="l-container">
-            <h4 class="con-title">Go语言真的那么流行吗？</h4>
+            <h4 class="con-title">{{post.title}}</h4>
             <div class="con-memo">
-              <p>最近微信公众号、QQ群、新闻里面谈论的人有点多啊，怎么感觉大家都在说go语言，理性讨论，有一说一，是不是真的很火啊，应该要学习go语言么？</p>
+              <p>{{post.summary}}</p>
             </div>
             <div class="user-btn">
               <span class="btn-item">
-                <i class="iconfont icon-comment"></i>comment
+                <i class="iconfont icon-comment"></i>
+                <span>{{post.comments}} comments</span>
               </span>
             </div>
           </div>
@@ -210,7 +211,38 @@
 
 export default {
   name: "Home",
-  components: {}
+  components: {},
+  data() {
+    return {
+      page: 1,
+      postList: []
+    };
+  },
+  methods: {
+    getPostList() {
+      this.$axios({
+        method: "get",
+        url: "/post",
+        data: JSON.stringify({
+          page: this.page
+        })
+      })
+        .then(response => {
+          console.log(response.data);
+          if (response.code == 1000) {
+            this.postList = response.data;
+          } else {
+            console.log(response.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  },
+  mounted: function() {
+    this.getPostList();
+  }
 };
 </script>
 
@@ -250,7 +282,7 @@ export default {
       margin-bottom: 16px;
       padding: 0 12px;
       .iconfont {
-        margin-right:4px;
+        margin-right: 4px;
       }
       .btn-iconfont {
         display: flex;
@@ -342,7 +374,7 @@ export default {
             text-decoration: none;
             word-break: break-word;
           }
-          .con-memo{
+          .con-memo {
             margin-top: 10px;
             margin-bottom: 10px;
           }

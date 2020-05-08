@@ -4,15 +4,15 @@
       <h2 class="form-title">注册</h2>
       <div class="form-group">
         <label for="name">用户名</label>
-        <input type="text" class="form-control" name="name" id="name" placeholder="用户名" />
+        <input type="text" class="form-control" name="name" id="name" placeholder="用户名" v-model="username"/>
       </div>
       <div class="form-group">
         <label for="pass">密码</label>
-        <input type="password" class="form-control" name="pass" id="pass" placeholder="密码" />
+        <input type="password" class="form-control" name="pass" id="pass" placeholder="密码" v-model="password"/>
       </div>
       <div class="form-group">
         <label for="re_pass">确认密码</label>
-        <input type="password" class="form-control" name="re_pass" id="re_pass" placeholder="确认密码" />
+        <input type="password" class="form-control" name="re_pass" id="re_pass" placeholder="确认密码"  v-model="confirm_password"/>
       </div>
       <div class="form-btn">
         <button type="button" class="btn btn-info">提交</button>
@@ -23,7 +23,40 @@
 
 <script>
 export default {
-  name: "Login",
+	name: "Login",
+	data() {
+		return {
+			username: "",
+			password: "",
+			confirm_password: "",
+			submitted: false
+		};
+	},
+	computed: {
+	},
+	created() {
+
+	},
+	methods: {
+		submit() {
+			this.$axios({
+				method: 'post',
+				url:'/register',
+				data: JSON.stringify({
+					username: this.username,
+					password: this.password,
+					confirm_password: this.confirm_password
+				})
+			}).then((response)=>{
+				console.log(response.data);
+				if (response.code == 1000) {
+					console.log('success')
+				}
+			}).catch((error)=>{
+				console.log(error)
+			})
+		}
+	}
 };
 </script>
 <style lang="less" scoped>

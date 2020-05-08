@@ -5,7 +5,10 @@ import Content from '../views/Content.vue'
 import Publish from '../views/Publish.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
-
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err);
+}
 Vue.use(VueRouter)
 
   const routes = [
@@ -26,12 +29,12 @@ Vue.use(VueRouter)
   },
   {
     path: '/login',
-    name:"/Login",
+    name:"Login",
     component: Login
   },
   {
     path: '/register',
-    name:"/Register",
+    name:"Register",
     component: Register
   }
 ]

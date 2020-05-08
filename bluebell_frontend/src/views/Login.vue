@@ -19,27 +19,42 @@
 
 <script>
 export default {
-  name: "Login",
-  data() {
-    return {
-      username: "",
-      password: "",
-      submitted: false
-    };
-  },
-  computed: {
-  },
-  created() {
+	name: "Login",
+	data() {
+		return {
+			username: "",
+			password: "",
+			submitted: false
+		};
+	},
+	computed: {
+	},
+	created() {
 
-  },
-  methods: {
-    submit() {
-      this.axios({
-        type: "POST",
-        data: {},
-      })
-    }
-  }
+	},
+	methods: {
+		submit() {
+			this.$axios({
+				method: 'post',
+				url:'/login',
+				data: JSON.stringify({
+					username: this.username,
+					password: this.password
+				})
+			}).then((response)=>{
+				console.log(response.data)
+				if (response.code == 1000) {
+          window.localStorage.setItem('bluebellToken', response.data.token);
+          this.$store.commit("login", {userID: response.data.userID, userName: response.data.userName});
+          this.$router.push({path: this.redirect || '/' })
+				} else {
+					console.log(response.message)
+				}
+			}).catch((error)=>{
+				console.log(error)
+			})
+		}
+	}
 };
 </script>
 <style lang="less" scoped>
