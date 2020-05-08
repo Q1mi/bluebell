@@ -127,3 +127,20 @@ func GetCommunityPost(communityName, orderKey string, page int64) []map[string]s
 	}
 	return GetPost(key, page)
 }
+
+// Reddit Hot rank algorithms
+// from https://github.com/reddit-archive/reddit/blob/master/r2/r2/lib/db/_sorts.pyx
+func Hot(ups, downs int, date time.Time) float64 {
+	s := float64(ups - downs)
+	order := math.Log10(math.Max(math.Abs(s), 1))
+	var sign float64
+	if s > 0 {
+		sign = 1
+	} else if s == 0 {
+		sign = 0
+	} else {
+		sign = -1
+	}
+	seconds := float64(date.Second() - 1577808000)
+	return math.Round(sign*order + seconds/43200)
+}

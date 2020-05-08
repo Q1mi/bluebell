@@ -14,15 +14,10 @@ import (
 )
 
 func RegisterHandler(c *gin.Context) {
-	// 1.获取请求参数
+	// 1.获取请求参数 2.校验数据有效性
 	var fo models.RegisterForm
-	if err := c.ShouldBind(&fo); err != nil {
-		ResponseError(c, CodeInvalidParams)
-		return
-	}
-	// 2.校验数据有效性
-	if ok, errMsg := fo.Validate(); !ok {
-		ResponseErrorWithMsg(c, CodeInvalidParams, errMsg)
+	if err := c.ShouldBindJSON(&fo); err != nil {
+		ResponseErrorWithMsg(c, CodeInvalidParams, err.Error())
 		return
 	}
 	// 3.注册用户
@@ -44,13 +39,9 @@ func RegisterHandler(c *gin.Context) {
 
 func LoginHandler(c *gin.Context) {
 	var u models.User
-	if err := c.BindJSON(&u); err != nil {
+	if err := c.ShouldBindJSON(&u); err != nil {
 		fmt.Println(err)
-		ResponseError(c, CodeInvalidParams)
-		return
-	}
-	if ok, errMsg := u.LoginValidate(); !ok {
-		ResponseErrorWithMsg(c, CodeInvalidParams, errMsg)
+		ResponseErrorWithMsg(c, CodeInvalidParams, err.Error())
 		return
 	}
 	if err := mysql.Login(&u); err != nil {
@@ -59,5 +50,9 @@ func LoginHandler(c *gin.Context) {
 	}
 	// 生成Token
 	tokenString, _ := utils.GenToken(u.UserID)
-	ResponseSuccess(c, tokenString)
+	ResponseSuccess(c, gin.H{
+		"token":    tokenString,
+		"userID":   u.UserID,
+		"userName": u.UserName,
+	})
 }

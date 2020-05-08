@@ -19,11 +19,7 @@ import (
 func CreatePostHandler(c *gin.Context) {
 	var post models.Post
 	if err := c.ShouldBindJSON(&post); err != nil {
-		ResponseError(c, CodeInvalidParams)
-		return
-	}
-	if !post.Valid() {
-		ResponseError(c, CodeInvalidParams)
+		ResponseErrorWithMsg(c, CodeInvalidParams, err.Error())
 		return
 	}
 	// 生成帖子ID
@@ -58,7 +54,7 @@ func CreatePostHandler(c *gin.Context) {
 	if err := redis.CreatePost(
 		fmt.Sprint(post.PostID),
 		fmt.Sprint(post.AuthorId),
-		post.Caption, utils.TruncateByWords(post.Content, 120),
+		post.Title, utils.TruncateByWords(post.Content, 120),
 		community.CommunityName); err != nil {
 		logger.Error("redis.CreatePost failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
@@ -79,6 +75,7 @@ func PostListHandler(c *gin.Context) {
 		pageNum = 1
 	}
 	posts := redis.GetPost(order, pageNum)
+	fmt.Println(len(posts))
 	ResponseSuccess(c, posts)
 }
 

@@ -3,7 +3,6 @@ package controller
 import (
 	"bluebell_backend/utils"
 	"errors"
-	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -25,20 +24,14 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 		// 这里的具体实现方式要依据你的实际业务情况决定
 		authHeader := c.Request.Header.Get("Authorization")
 		if authHeader == "" {
-			c.JSON(http.StatusOK, gin.H{
-				"code": 2003,
-				"msg":  "请求头中auth为空",
-			})
+			ResponseErrorWithMsg(c, CodeInvalidToken, "请求头缺少Auth Token")
 			c.Abort()
 			return
 		}
 		// 按空格分割
 		parts := strings.SplitN(authHeader, " ", 2)
 		if !(len(parts) == 2 && parts[0] == "Bearer") {
-			c.JSON(http.StatusOK, gin.H{
-				"code": 2004,
-				"msg":  "请求头中auth格式有误",
-			})
+			ResponseErrorWithMsg(c, CodeInvalidToken, "Token格式不对")
 			c.Abort()
 			return
 		}
