@@ -1,9 +1,9 @@
 
 import axios from 'axios';
-axios.defaults.baseURL = "api";
-axios.interceptors.request.use( (config) => {
-  const token = sessionStorage.getItem('token')
-    if (token ) { 
+axios.defaults.baseURL = "http://127.0.0.1:8080/api/v1/";
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('bluebellToken')
+    if (token) { 
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;

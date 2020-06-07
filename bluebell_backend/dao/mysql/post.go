@@ -13,9 +13,9 @@ import (
 // CreatePost 创建帖子
 func CreatePost(post *models.Post) (err error) {
 	sqlStr := `insert into post(
-	post_id, caption, content, author_id, community_id)
+	post_id, title, content, author_id, community_id)
 	values(?,?,?,?,?)`
-	_, err = db.Exec(sqlStr, post.PostID, post.Caption,
+	_, err = db.Exec(sqlStr, post.PostID, post.Title,
 		post.Content, post.AuthorId, post.CommunityID)
 	if err != nil {
 		logger.Error("insert post failed", zap.Error(err))
@@ -28,7 +28,7 @@ func CreatePost(post *models.Post) (err error) {
 //GetPostByID
 func GetPostByID(idStr string) (post *models.ApiPostDetail, err error) {
 	post = new(models.ApiPostDetail)
-	sqlStr := `select post_id, caption, content, author_id, community_id, create_time
+	sqlStr := `select post_id, title, content, author_id, community_id, create_time
 	from post
 	where post_id = ?`
 	err = db.Get(post, sqlStr, idStr)
@@ -45,7 +45,7 @@ func GetPostByID(idStr string) (post *models.ApiPostDetail, err error) {
 }
 
 func GetPostListByIDs(ids []string) (postList []*models.Post, err error) {
-	sqlStr := `select post_id, caption, content, author_id, community_id, create_time
+	sqlStr := `select post_id, title, content, author_id, community_id, create_time
 	from post
 	where post_id in (?)`
 	// 动态填充id

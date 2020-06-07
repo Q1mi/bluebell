@@ -44,10 +44,11 @@ export default {
 			}).then((response)=>{
 				console.log(response.data)
 				if (response.code == 1000) {
-          window.localStorage.setItem('bluebellToken', response.data);
-          this.$router.push({path: "/"})
+          window.localStorage.setItem('bluebellToken', response.data.token);
+          this.$store.commit("login", {userID: response.data.userID, userName: response.data.userName});
+          this.$router.push({path: this.redirect || '/' })
 				} else {
-					console.log('error')
+					console.log(response.message)
 				}
 			}).catch((error)=>{
 				console.log(error)

@@ -1,21 +1,38 @@
 <template>
   <header class="header">
-    <span class="logo">bluebell</span>
+      <span class="logo">bluebell</span>
     <div class="search">
       <label class="s-logo"></label>
       <input type="text" class="s-input" placeholder="搜索" />
     </div>
     <div class="btns">
-      <a class="login-btn">LOG IN</a>
-      <a class="login-btn">SIGN UP</a>
-      <span class="user"></span>
+      <div v-show="!isLogin">
+        <a class="login-btn" @click="goLogin">登录</a>
+        <a class="login-btn" @click="goRegister">注册</a>
+      </div>
+      <div v-show="isLogin">
+        <span class="user"></span>
+      </div>
     </div>
   </header>
 </template>
 
 <script>
 export default {
-  name: "HeadBar"
+  name: "HeadBar",
+  computed: {
+    isLogin() {
+      return this.$store.isLogin;
+    }
+  },
+  methods: {
+    goLogin() {
+      this.$router.push({ name: "Login" });
+    },
+    goRegister() {
+      this.$router.push({ name: "Register" });
+    }
+  }
 };
 </script>
 
@@ -32,7 +49,7 @@ export default {
   top: 0;
   z-index: 1;
   .logo {
-    // width: 32px;
+    margin-left: 10px;
     height: 32px;
     background: url("../assets/images/logo.png") no-repeat;
     background-size: 32px 32px;
@@ -100,6 +117,7 @@ export default {
       color: #0079d3;
       fill: #0079d3;
       display: inline-block;
+      cursor: pointer;
       &:nth-child(1) {
         margin-right: 5px;
       }
