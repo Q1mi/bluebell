@@ -11,7 +11,7 @@
         <a class="login-btn" @click="goRegister">注册</a>
       </div>
       <div v-show="isLogin">
-        <span class="user"></span>
+        <span class="user">{{ currUserName }}</span>
       </div>
     </div>
   </header>
@@ -22,7 +22,10 @@ export default {
   name: "HeadBar",
   computed: {
     isLogin() {
-      return this.$store.isLogin;
+      return this.$store.state.isLogin;
+    },
+    currUserName(){
+      return this.$store.state.userName;
     }
   },
   methods: {
@@ -131,7 +134,7 @@ export default {
       background: url("../assets/images/avatar.png") no-repeat;
       background-size: 24px 24px;
       background-position: left center;
-      padding-left: 20px;
+      padding-left: 28px;
       display: flex;
       display: -webkit-flex;
       align-items: center;
