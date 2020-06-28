@@ -1,7 +1,6 @@
 package mysql
 
 import (
-	"bluebell_backend/logger"
 	"bluebell_backend/models"
 	"database/sql"
 
@@ -29,7 +28,7 @@ func GetCommunityNameByID(idStr string) (community *models.Community, err error)
 		return
 	}
 	if err != nil {
-		logger.Error("query community failed", zap.String("sql", sqlStr), zap.Error(err))
+		zap.L().Error("query community failed", zap.String("sql", sqlStr), zap.Error(err))
 		err = ErrorQueryFailed
 		return
 	}
@@ -47,7 +46,7 @@ func GetCommunityByID(idStr string) (community *models.CommunityDetail, err erro
 		return
 	}
 	if err != nil {
-		logger.Error("query community failed", zap.String("sql", sqlStr), zap.Error(err))
+		zap.L().Error("query community failed", zap.String("sql", sqlStr), zap.Error(err))
 		err = ErrorQueryFailed
 		return
 	}

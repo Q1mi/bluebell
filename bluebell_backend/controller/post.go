@@ -1,12 +1,9 @@
 package controller
 
 import (
-	"bluebell_backend/dao/mysql"
 	"bluebell_backend/dao/redis"
-	"bluebell_backend/logger"
+	"bluebell_backend/logic"
 	"bluebell_backend/models"
-	"bluebell_backend/pkg/gen_id"
-	"bluebell_backend/utils"
 	"fmt"
 	"strconv"
 
@@ -22,41 +19,20 @@ func CreatePostHandler(c *gin.Context) {
 		ResponseErrorWithMsg(c, CodeInvalidParams, err.Error())
 		return
 	}
-	// 生成帖子ID
-	postID, err := gen_id.GetID()
-	if err != nil {
-		logger.Error("gen_id.GetID() failed", zap.Error(err))
-		ResponseError(c, CodeServerBusy)
-		return
-	}
+	// 参数校验
+
 	// 获取作者ID，当前请求的UserID
-	userID, err := GetCurrentUserID(c)
+	userID, err := getCurrentUserID(c)
 	if err != nil {
-		logger.Error("GetCurrentUserID() failed", zap.Error(err))
+		zap.L().Error("GetCurrentUserID() failed", zap.Error(err))
 		ResponseError(c, CodeNotLogin)
 		return
 	}
-	post.PostID = postID
 	post.AuthorId = userID
 
-	// 创建帖子
-	if err := mysql.CreatePost(&post); err != nil {
-		logger.Error("mysql.CreatePost(&post) failed", zap.Error(err))
-		ResponseError(c, CodeServerBusy)
-		return
-	}
-	community, err := mysql.GetCommunityNameByID(fmt.Sprint(post.CommunityID))
+	err = logic.CreatePost(&post)
 	if err != nil {
-		logger.Error("mysql.GetCommunityNameByID failed", zap.Error(err))
-		ResponseError(c, CodeServerBusy)
-		return
-	}
-	if err := redis.CreatePost(
-		fmt.Sprint(post.PostID),
-		fmt.Sprint(post.AuthorId),
-		post.Title, utils.TruncateByWords(post.Content, 120),
-		community.CommunityName); err != nil {
-		logger.Error("redis.CreatePost failed", zap.Error(err))
+		zap.L().Error("logic.CreatePost failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
 		return
 	}
@@ -81,26 +57,12 @@ func PostListHandler(c *gin.Context) {
 
 // PostDetailHandler 帖子详情
 func PostDetailHandler(c *gin.Context) {
-	postID := c.Param("id")
-	post, err := mysql.GetPostByID(postID)
+	postId := c.Param("id")
+
+	post, err := logic.GetPost(postId)
 	if err != nil {
-		logger.Error("mysql.GetPostByID(postID) failed", zap.String("post_id", postID), zap.Error(err))
-		ResponseError(c, CodeServerBusy)
-		return
+		zap.L().Error("logic.GetPost(postID) failed", zap.String("postId", postId), zap.Error(err))
 	}
-	user, err := mysql.GetUserByID(fmt.Sprint(post.AuthorId))
-	if err != nil {
-		logger.Error("mysql.GetUserByID() failed", zap.String("author_id", fmt.Sprint(post.AuthorId)), zap.Error(err))
-		ResponseError(c, CodeServerBusy)
-		return
-	}
-	post.AuthorName = user.UserName
-	community, err := mysql.GetCommunityByID(fmt.Sprint(post.CommunityID))
-	if err != nil {
-		logger.Error("mysql.GetCommunityByID() failed", zap.String("community_id", fmt.Sprint(post.CommunityID)), zap.Error(err))
-		ResponseError(c, CodeServerBusy)
-		return
-	}
-	post.CommunityName = community.CommunityName
+
 	ResponseSuccess(c, post)
 }

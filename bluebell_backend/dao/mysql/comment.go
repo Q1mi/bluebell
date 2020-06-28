@@ -1,7 +1,6 @@
 package mysql
 
 import (
-	"bluebell_backend/logger"
 	"bluebell_backend/models"
 
 	"github.com/jmoiron/sqlx"
@@ -16,7 +15,7 @@ func CreateComment(comment *models.Comment) (err error) {
 	_, err = db.Exec(sqlStr, comment.CommentID, comment.Content, comment.PostID,
 		comment.AuthorID, comment.ParentID)
 	if err != nil {
-		logger.Error("insert comment failed", zap.Error(err))
+		zap.L().Error("insert comment failed", zap.Error(err))
 		err = ErrorInsertFailed
 		return
 	}

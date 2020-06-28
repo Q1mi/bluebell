@@ -14,7 +14,7 @@ func SetupRouter() *gin.Engine {
 	r := gin.Default()
 	v1 := r.Group("/api/v1")
 	v1.POST("/login", controller.LoginHandler)
-	v1.POST("/register", controller.RegisterHandler)
+	v1.POST("/signup", controller.SignupHandler)
 	v1.Use(controller.JWTAuthMiddleware())
 	{
 		v1.GET("/community", controller.CommunityHandler)

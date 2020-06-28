@@ -1,7 +1,8 @@
-package gen_id
+package snowflake
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/sony/sonyflake"
 )
@@ -15,13 +16,15 @@ func getMachineID() (uint16, error) {
 	return sonyMachineID, nil
 }
 
+// 需传入当前的机器ID
 func Init(machineId uint16) (err error) {
 	sonyMachineID = machineId
-
-	settings := sonyflake.Settings{}
-	settings.MachineID = getMachineID
+	t, _ := time.Parse("2006-01-02", "2020-01-01")
+	settings := sonyflake.Settings{
+		StartTime: t,
+		MachineID: getMachineID,
+	}
 	sonyFlake = sonyflake.NewSonyflake(settings)
-
 	return
 }
 

@@ -2,10 +2,19 @@ package mysql
 
 import (
 	"bluebell_backend/models"
-	"bluebell_backend/pkg/gen_id"
-	"bluebell_backend/utils"
+	"bluebell_backend/pkg/snowflake"
+	"crypto/md5"
 	"database/sql"
+	"encoding/hex"
 )
+
+const secret = "liwenzhou.com"
+
+func encryptPassword(data []byte) (result string) {
+	h := md5.New()
+	h.Write([]byte(secret))
+	return hex.EncodeToString(h.Sum(data))
+}
 
 func Register(user *models.User) (err error) {
 	sqlStr := "select count(user_id) from user where username = ?"
@@ -19,12 +28,12 @@ func Register(user *models.User) (err error) {
 		return ErrorUserExit
 	}
 	// 生成user_id
-	userID, err := gen_id.GetID()
+	userID, err := snowflake.GetID()
 	if err != nil {
 		return ErrorGenIDFailed
 	}
 	// 生成加密密码
-	password := utils.EncryptPassword([]byte(user.Password))
+	password := encryptPassword([]byte(user.Password))
 	// 把用户插入数据库
 	sqlStr = "insert into user(user_id, username, password) values (?,?,?)"
 	_, err = db.Exec(sqlStr, userID, user.UserName, password)
@@ -44,7 +53,7 @@ func Login(user *models.User) (err error) {
 		return ErrorUserNotExit
 	}
 	// 生成加密密码与查询到的密码比较
-	password := utils.EncryptPassword([]byte(originPassword))
+	password := encryptPassword([]byte(originPassword))
 	if user.Password != password {
 		return ErrorPasswordWrong
 	}

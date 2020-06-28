@@ -4,7 +4,7 @@ import (
 	"bluebell_backend/dao/mysql"
 	"bluebell_backend/dao/redis"
 	"bluebell_backend/logger"
-	"bluebell_backend/pkg/gen_id"
+	"bluebell_backend/pkg/snowflake"
 	"bluebell_backend/routers"
 	"bluebell_backend/settings"
 	"flag"
@@ -13,10 +13,10 @@ import (
 
 func main() {
 	var confFile string
-	flag.StringVar(&confFile, "conf", "./conf/bluebell.ini", "配置文件")
+	flag.StringVar(&confFile, "conf", "./conf/config.ini", "配置文件")
 	flag.Parse()
 	// 加载配置
-	if err := settings.LoadFromFile(confFile); err != nil {
+	if err := settings.Init(); err != nil {
 		fmt.Printf("load config failed, err:%v\n", err)
 		return
 	}
@@ -34,13 +34,13 @@ func main() {
 		return
 	}
 	defer redis.Close()
-	if err := gen_id.Init(1); err != nil {
-		fmt.Printf("init gen_id failed, err:%v\n", err)
+	if err := snowflake.Init(1); err != nil {
+		fmt.Printf("init snowflake failed, err:%v\n", err)
 		return
 	}
 	// 注册路由
 	r := routers.SetupRouter()
-	err := r.Run(fmt.Sprintf(":%d", settings.Conf.ServerConfig.Port))
+	err := r.Run(fmt.Sprintf(":%d", settings.Conf.Port))
 	if err != nil {
 		fmt.Printf("run server failed, err:%v\n", err)
 		return

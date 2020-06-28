@@ -1,7 +1,6 @@
 package mysql
 
 import (
-	"bluebell_backend/logger"
 	"bluebell_backend/models"
 	"database/sql"
 
@@ -18,7 +17,7 @@ func CreatePost(post *models.Post) (err error) {
 	_, err = db.Exec(sqlStr, post.PostID, post.Title,
 		post.Content, post.AuthorId, post.CommunityID)
 	if err != nil {
-		logger.Error("insert post failed", zap.Error(err))
+		zap.L().Error("insert post failed", zap.Error(err))
 		err = ErrorInsertFailed
 		return
 	}
@@ -37,7 +36,7 @@ func GetPostByID(idStr string) (post *models.ApiPostDetail, err error) {
 		return
 	}
 	if err != nil {
-		logger.Error("query post failed", zap.String("sql", sqlStr), zap.Error(err))
+		zap.L().Error("query post failed", zap.String("sql", sqlStr), zap.Error(err))
 		err = ErrorQueryFailed
 		return
 	}

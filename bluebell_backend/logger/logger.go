@@ -29,7 +29,9 @@ func Init(cfg *settings.LogConfig) (err error) {
 	}
 	core := zapcore.NewCore(encoder, writeSyncer, l)
 
-	lg = zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1))
+	lg = zap.New(core, zap.AddCaller())
+	zap.ReplaceGlobals(lg)
+	zap.L().Info("init logger success")
 	return
 }
 
@@ -120,24 +122,4 @@ func GinRecovery(stack bool) gin.HandlerFunc {
 		}()
 		c.Next()
 	}
-}
-
-func Debug(msg string, fields ...zap.Field) {
-	lg.Debug(msg, fields...)
-}
-
-func Info(msg string, fields ...zap.Field) {
-	lg.Info(msg, fields...)
-}
-
-func Warn(msg string, fields ...zap.Field) {
-	lg.Warn(msg, fields...)
-}
-
-func Error(msg string, fields ...zap.Field) {
-	lg.Error(msg, fields...)
-}
-
-func With(fields ...zap.Field) *zap.Logger {
-	return lg.With(fields...)
 }

@@ -2,9 +2,8 @@ package controller
 
 import (
 	"bluebell_backend/dao/mysql"
-	"bluebell_backend/logger"
 	"bluebell_backend/models"
-	"bluebell_backend/pkg/gen_id"
+	"bluebell_backend/pkg/snowflake"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -22,16 +21,16 @@ func CommentHandler(c *gin.Context) {
 		return
 	}
 	// 生成帖子ID
-	commentID, err := gen_id.GetID()
+	commentID, err := snowflake.GetID()
 	if err != nil {
-		logger.Error("gen_id.GetID() failed", zap.Error(err))
+		zap.L().Error("snowflake.GetID() failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
 		return
 	}
 	// 获取作者ID，当前请求的UserID
-	userID, err := GetCurrentUserID(c)
+	userID, err := getCurrentUserID(c)
 	if err != nil {
-		logger.Error("GetCurrentUserID() failed", zap.Error(err))
+		zap.L().Error("GetCurrentUserID() failed", zap.Error(err))
 		ResponseError(c, CodeNotLogin)
 		return
 	}
@@ -40,7 +39,7 @@ func CommentHandler(c *gin.Context) {
 
 	// 创建帖子
 	if err := mysql.CreateComment(&comment); err != nil {
-		logger.Error("mysql.CreatePost(&post) failed", zap.Error(err))
+		zap.L().Error("mysql.CreatePost(&post) failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
 		return
 	}

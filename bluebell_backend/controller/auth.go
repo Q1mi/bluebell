@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"bluebell_backend/utils"
+	"bluebell_backend/pkg/jwt"
 	"errors"
 	"strings"
 
@@ -36,7 +36,7 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 			return
 		}
 		// parts[1]是获取到的tokenString，我们使用之前定义好的解析JWT的函数来解析它
-		mc, err := utils.ParseToken(parts[1])
+		mc, err := jwt.ParseToken(parts[1])
 		if err != nil {
 			ResponseError(c, CodeInvalidToken)
 			c.Abort()
@@ -46,18 +46,4 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 		c.Set(ContextUserIDKey, mc.UserID)
 		c.Next() // 后续的处理函数可以用过c.Get("userID")来获取当前请求的用户信息
 	}
-}
-
-func GetCurrentUserID(c *gin.Context) (userID uint64, err error) {
-	_userID, ok := c.Get(ContextUserIDKey)
-	if !ok {
-		err = ErrorUserNotLogin
-		return
-	}
-	userID, ok = _userID.(uint64)
-	if !ok {
-		err = ErrorUserNotLogin
-		return
-	}
-	return
 }
