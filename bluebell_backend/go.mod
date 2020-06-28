@@ -3,15 +3,11 @@ module bluebell_backend
 go 1.14
 
 require (
-	github.com/cosmtrek/air v1.12.1 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/fatih/color v1.9.0 // indirect
 	github.com/gin-gonic/gin v1.6.2
 	github.com/go-redis/redis v6.15.7+incompatible
 	github.com/go-sql-driver/mysql v1.4.0
-	github.com/imdario/mergo v0.3.9 // indirect
 	github.com/jmoiron/sqlx v1.2.0
-	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/onsi/ginkgo v1.12.0 // indirect
 	github.com/onsi/gomega v1.9.0 // indirect
