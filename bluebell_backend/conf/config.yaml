@@ -9,8 +9,8 @@ log:
   max_backups: 5
 
 mysql:
-  host: 127.0.0.1
-  port: 23306
+  host: mysql8019
+  port: 3306
   user: root
   password: root1234
   db: bluebell
@@ -18,6 +18,6 @@ mysql:
   max_idle_conns: 20
 
 redis:
-  host: 127.0.0.1
-  port: 26379
+  host: redis507
+  port: 6379
   db: 0
