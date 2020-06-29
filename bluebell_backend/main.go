@@ -13,7 +13,7 @@ import (
 
 func main() {
 	var confFile string
-	flag.StringVar(&confFile, "conf", "./conf/config.ini", "配置文件")
+	flag.StringVar(&confFile, "conf", "./conf/config.yaml", "配置文件")
 	flag.Parse()
 	// 加载配置
 	if err := settings.Init(); err != nil {
