@@ -10,7 +10,7 @@ log:
 
 mysql:
   host: 127.0.0.1
-  port: 23306
+  port: 13306
   user: root
   password: root1234
   db: bluebell
@@ -19,5 +19,5 @@ mysql:
 
 redis:
   host: 127.0.0.1
-  port: 26379
+  port: 16379
   db: 0

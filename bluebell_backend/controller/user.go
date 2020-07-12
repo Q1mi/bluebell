@@ -5,13 +5,16 @@ import (
 	"bluebell_backend/models"
 	"bluebell_backend/pkg/jwt"
 	"errors"
+	"fmt"
+	"net/http"
+	"strings"
 
 	"go.uber.org/zap"
 
 	"github.com/gin-gonic/gin"
 )
 
-func SignupHandler(c *gin.Context) {
+func SignUpHandler(c *gin.Context) {
 	// 1.获取请求参数 2.校验数据有效性
 	var fo models.RegisterForm
 	if err := c.ShouldBindJSON(&fo); err != nil {
@@ -49,9 +52,38 @@ func LoginHandler(c *gin.Context) {
 	}
 	// 生成Token
 	tokenString, _ := jwt.GenToken(u.UserID)
+	rToken, _ := jwt.GenRefreshToken()
 	ResponseSuccess(c, gin.H{
 		"token":    tokenString,
+		"r_token":  rToken,
 		"userID":   u.UserID,
 		"userName": u.UserName,
+	})
+}
+
+func RefreshTokenHandler(c *gin.Context) {
+	rt := c.Query("refresh_token")
+	// 客户端携带Token有三种方式 1.放在请求头 2.放在请求体 3.放在URI
+	// 这里假设Token放在Header的Authorization中，并使用Bearer开头
+	// 这里的具体实现方式要依据你的实际业务情况决定
+	authHeader := c.Request.Header.Get("Authorization")
+	if authHeader == "" {
+		ResponseErrorWithMsg(c, CodeInvalidToken, "请求头缺少Auth Token")
+		c.Abort()
+		return
+	}
+	// 按空格分割
+	parts := strings.SplitN(authHeader, " ", 2)
+	if !(len(parts) == 2 && parts[0] == "Bearer") {
+		ResponseErrorWithMsg(c, CodeInvalidToken, "Token格式不对")
+		c.Abort()
+		return
+	}
+	nt, err := jwt.RefreshToken(parts[1], rt)
+	fmt.Println(err)
+	c.JSON(http.StatusOK, gin.H{
+		"access_token":  parts[1],
+		"refresh_token": rt,
+		"new_token":     nt,
 	})
 }

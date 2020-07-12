@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -16,9 +17,13 @@ type MyClaims struct {
 	jwt.StandardClaims
 }
 
-var MySecret = []byte("夏天夏天悄悄过去")
+var mySecret = []byte("夏天夏天悄悄过去")
 
-const TokenExpireDuration = time.Hour * 24 * 365
+func keyFunc(token *jwt.Token) (i interface{}, err error) {
+	return mySecret, nil
+}
+
+const TokenExpireDuration = time.Second
 
 // GenToken 生成JWT
 func GenToken(userID uint64) (string, error) {
@@ -33,15 +38,25 @@ func GenToken(userID uint64) (string, error) {
 	// 使用指定的签名方法创建签名对象
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
 	// 使用指定的secret签名并获得完整的编码后的字符串token
-	return token.SignedString(MySecret)
+	return token.SignedString(mySecret)
+}
+
+func GenRefreshToken() (string, error) {
+	// 创建一个我们自己的声明
+	c := jwt.StandardClaims{
+		ExpiresAt: time.Now().Add(time.Second * 30).Unix(), // 过期时间
+		Issuer:    "bluebell",                              // 签发人
+	}
+	// 使用指定的签名方法创建签名对象
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
+	// 使用指定的secret签名并获得完整的编码后的字符串token
+	return token.SignedString(mySecret)
 }
 
 // ParseToken 解析JWT
 func ParseToken(tokenString string) (*MyClaims, error) {
 	// 解析token
-	token, err := jwt.ParseWithClaims(tokenString, &MyClaims{}, func(token *jwt.Token) (i interface{}, err error) {
-		return MySecret, nil
-	})
+	token, err := jwt.ParseWithClaims(tokenString, &MyClaims{}, keyFunc)
 	if err != nil {
 		return nil, err
 	}
@@ -49,4 +64,25 @@ func ParseToken(tokenString string) (*MyClaims, error) {
 		return claims, nil
 	}
 	return nil, errors.New("invalid token")
+}
+
+// RefreshToken 刷新AccessToken
+func RefreshToken(aToken, rToken string) (newToken string, err error) {
+	// refresh token无效直接返回
+	_, err = jwt.Parse(rToken, keyFunc)
+	if err != nil {
+		return "", err
+	}
+
+	var claims MyClaims
+	_, err = jwt.ParseWithClaims(aToken, &claims, keyFunc)
+	v, _ := err.(*jwt.ValidationError)
+
+	// 当access token是过期错误 并且 refresh token没有过期时就创建一个新的access token
+	if v.Errors == jwt.ValidationErrorExpired {
+		fmt.Println(1, claims)
+
+		return GenToken(claims.UserID)
+	}
+	return "", err
 }
