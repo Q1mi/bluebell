@@ -18,7 +18,7 @@ services:
       - ./init.sql:/data/application/init.sql
   bluebell_app:
     build: .
-    command: sh -c "./wait-for.sh redis507:26379 mysql8019:23306 -- ./bluebell ./conf/config.yaml"
+    command: sh -c "./wait-for.sh redis507:6379 mysql8019:3306 -- ./bluebell ./conf/config.yaml"
     depends_on:
       - mysql8019
       - redis507
