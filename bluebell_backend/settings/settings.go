@@ -45,9 +45,7 @@ type LogConfig struct {
 }
 
 func Init() error {
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath("./conf/")
+	viper.SetConfigFile("./conf/config.yaml")
 
 	viper.WatchConfig()
 	viper.OnConfigChange(func(in fsnotify.Event) {

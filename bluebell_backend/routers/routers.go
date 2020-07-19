@@ -16,6 +16,7 @@ func SetupRouter() *gin.Engine {
 	v1.POST("/login", controller.LoginHandler)
 	v1.POST("/signup", controller.SignUpHandler)
 	v1.GET("/refresh_token", controller.RefreshTokenHandler)
+
 	v1.Use(controller.JWTAuthMiddleware())
 	{
 		v1.GET("/community", controller.CommunityHandler)

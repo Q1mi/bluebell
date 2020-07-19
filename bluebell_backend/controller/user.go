@@ -51,13 +51,13 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 	// 生成Token
-	tokenString, _ := jwt.GenToken(u.UserID)
+	token, _ := jwt.GenToken(u.UserID)
 	rToken, _ := jwt.GenRefreshToken()
 	ResponseSuccess(c, gin.H{
-		"token":    tokenString,
-		"r_token":  rToken,
-		"userID":   u.UserID,
-		"userName": u.UserName,
+		"accessToken":  token,
+		"refreshToken": rToken,
+		"userID":       u.UserID,
+		"username":     u.UserName,
 	})
 }
 

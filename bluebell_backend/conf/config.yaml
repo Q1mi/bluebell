@@ -13,7 +13,7 @@ mysql:
   port: 13306
   user: root
   password: root1234
-  db: bluebell
+  db: bluebell_pre
   max_open_conns: 100
   max_idle_conns: 20
 

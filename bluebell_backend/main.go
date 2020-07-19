@@ -7,20 +7,19 @@ import (
 	"bluebell_backend/pkg/snowflake"
 	"bluebell_backend/routers"
 	"bluebell_backend/settings"
-	"flag"
 	"fmt"
 )
 
 func main() {
-	var confFile string
-	flag.StringVar(&confFile, "conf", "./conf/config.yaml", "配置文件")
-	flag.Parse()
+	//var confFile string
+	//flag.StringVar(&confFile, "conf", "./conf/config.yaml", "配置文件")
+	//flag.Parse()
 	// 加载配置
 	if err := settings.Init(); err != nil {
 		fmt.Printf("load config failed, err:%v\n", err)
 		return
 	}
-	if err := logger.Init(settings.Conf.LogConfig); err != nil {
+	if err := logger.Init(settings.Conf.LogConfig, settings.Conf.Mode); err != nil {
 		fmt.Printf("init logger failed, err:%v\n", err)
 		return
 	}
