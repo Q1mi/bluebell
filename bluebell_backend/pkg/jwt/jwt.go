@@ -25,8 +25,8 @@ func keyFunc(token *jwt.Token) (i interface{}, err error) {
 
 const TokenExpireDuration = time.Second
 
-// GenToken 生成JWT
-func GenToken(userID uint64) (string, error) {
+// GenToken 生成access token 和 refresh token
+func GenToken(userID uint64) (aToken, rToken string, err error) {
 	// 创建一个我们自己的声明
 	c := MyClaims{
 		userID, // 自定义字段
@@ -35,22 +35,16 @@ func GenToken(userID uint64) (string, error) {
 			Issuer:    "bluebell",                                 // 签发人
 		},
 	}
-	// 使用指定的签名方法创建签名对象
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
-	// 使用指定的secret签名并获得完整的编码后的字符串token
-	return token.SignedString(mySecret)
-}
+	// 加密并获得完整的编码后的字符串token
+	aToken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, c).SignedString(mySecret)
 
-func GenRefreshToken() (string, error) {
-	// 创建一个我们自己的声明
-	c := jwt.StandardClaims{
+	// refresh token 不需要存任何自定义数据
+	rToken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(time.Second * 30).Unix(), // 过期时间
 		Issuer:    "bluebell",                              // 签发人
-	}
-	// 使用指定的签名方法创建签名对象
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
+	}).SignedString(mySecret)
 	// 使用指定的secret签名并获得完整的编码后的字符串token
-	return token.SignedString(mySecret)
+	return
 }
 
 // ParseToken 解析JWT
