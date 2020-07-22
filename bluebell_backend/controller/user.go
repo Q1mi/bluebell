@@ -51,10 +51,9 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 	// 生成Token
-	token, _ := jwt.GenToken(u.UserID)
-	rToken, _ := jwt.GenRefreshToken()
+	aToken, rToken, _ := jwt.GenToken(u.UserID)
 	ResponseSuccess(c, gin.H{
-		"accessToken":  token,
+		"accessToken":  aToken,
 		"refreshToken": rToken,
 		"userID":       u.UserID,
 		"username":     u.UserName,
@@ -79,11 +78,10 @@ func RefreshTokenHandler(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	nt, err := jwt.RefreshToken(parts[1], rt)
+	aToken, rToken, err := jwt.RefreshToken(parts[1], rt)
 	fmt.Println(err)
 	c.JSON(http.StatusOK, gin.H{
-		"access_token":  parts[1],
-		"refresh_token": rt,
-		"new_token":     nt,
+		"access_token":  aToken,
+		"refresh_token": rToken,
 	})
 }

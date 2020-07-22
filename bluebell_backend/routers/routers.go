@@ -31,11 +31,12 @@ func SetupRouter() *gin.Engine {
 		v1.POST("/comment", controller.CommentHandler)
 		v1.GET("/comment", controller.CommentListHandler)
 
+		v1.GET("/ping", func(c *gin.Context) {
+			c.String(http.StatusOK, "pong")
+		})
+
 	}
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.String(http.StatusOK, "pong")
-	})
 	r.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"msg": "404",

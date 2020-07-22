@@ -3,6 +3,7 @@ package controller
 import (
 	"bluebell_backend/pkg/jwt"
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -38,6 +39,7 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 		// parts[1]是获取到的tokenString，我们使用之前定义好的解析JWT的函数来解析它
 		mc, err := jwt.ParseToken(parts[1])
 		if err != nil {
+			fmt.Println(err)
 			ResponseError(c, CodeInvalidToken)
 			c.Abort()
 			return

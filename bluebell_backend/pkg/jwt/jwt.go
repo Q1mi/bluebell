@@ -2,7 +2,6 @@ package jwt
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -23,7 +22,7 @@ func keyFunc(token *jwt.Token) (i interface{}, err error) {
 	return mySecret, nil
 }
 
-const TokenExpireDuration = time.Second
+const TokenExpireDuration = time.Second * 60
 
 // GenToken 生成access token 和 refresh token
 func GenToken(userID uint64) (aToken, rToken string, err error) {
@@ -48,35 +47,35 @@ func GenToken(userID uint64) (aToken, rToken string, err error) {
 }
 
 // ParseToken 解析JWT
-func ParseToken(tokenString string) (*MyClaims, error) {
+func ParseToken(tokenString string) (claims *MyClaims, err error) {
 	// 解析token
-	token, err := jwt.ParseWithClaims(tokenString, &MyClaims{}, keyFunc)
+	var token *jwt.Token
+	claims = new(MyClaims)
+	token, err = jwt.ParseWithClaims(tokenString, claims, keyFunc)
 	if err != nil {
-		return nil, err
+		return
 	}
-	if claims, ok := token.Claims.(*MyClaims); ok && token.Valid { // 校验token
-		return claims, nil
+	if !token.Valid { // 校验token
+		err = errors.New("invalid token")
 	}
-	return nil, errors.New("invalid token")
+	return
 }
 
 // RefreshToken 刷新AccessToken
-func RefreshToken(aToken, rToken string) (newToken string, err error) {
+func RefreshToken(aToken, rToken string) (newAToken, newRToken string, err error) {
 	// refresh token无效直接返回
-	_, err = jwt.Parse(rToken, keyFunc)
-	if err != nil {
-		return "", err
+	if _, err = jwt.Parse(rToken, keyFunc); err != nil {
+		return
 	}
 
+	// 从旧access token中解析出claims数据
 	var claims MyClaims
 	_, err = jwt.ParseWithClaims(aToken, &claims, keyFunc)
 	v, _ := err.(*jwt.ValidationError)
 
 	// 当access token是过期错误 并且 refresh token没有过期时就创建一个新的access token
 	if v.Errors == jwt.ValidationErrorExpired {
-		fmt.Println(1, claims)
-
 		return GenToken(claims.UserID)
 	}
-	return "", err
+	return
 }
