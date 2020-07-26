@@ -8,10 +8,10 @@
     <div class="btns">
       <div v-show="!isLogin">
         <a class="login-btn" @click="goLogin">登录</a>
-        <a class="login-btn" @click="goRegister">注册</a>
+        <a class="login-btn" @click="goSignUp">注册</a>
       </div>
       <div v-show="isLogin">
-        <span class="user">{{ currUserName }}</span>
+        <span class="user">{{ currUsername }}</span>
       </div>
     </div>
   </header>
@@ -20,20 +20,24 @@
 <script>
 export default {
   name: "HeadBar",
+  created(){
+    this.$store.commit("init");
+  },
   computed: {
     isLogin() {
-      return this.$store.state.isLogin;
+      return this.$store.getters.isLogin;
     },
-    currUserName(){
-      return this.$store.state.userName;
+    currUsername(){
+      console.log(this.$store.getters.username);
+      return this.$store.getters.username;
     }
   },
   methods: {
     goLogin() {
       this.$router.push({ name: "Login" });
     },
-    goRegister() {
-      this.$router.push({ name: "Register" });
+    goSignUp() {
+      this.$router.push({ name: "SignUp" });
     }
   }
 };

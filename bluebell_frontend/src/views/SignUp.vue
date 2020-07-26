@@ -15,7 +15,7 @@
         <input type="password" class="form-control" name="re_pass" id="re_pass" placeholder="确认密码"  v-model="confirm_password"/>
       </div>
       <div class="form-btn">
-        <button type="button" class="btn btn-info">提交</button>
+        <button type="button" class="btn btn-info" @click="submit">提交</button>
       </div>
     </div>
   </div>
@@ -23,7 +23,7 @@
 
 <script>
 export default {
-	name: "Login",
+	name: "SignUp",
 	data() {
 		return {
 			username: "",
@@ -41,17 +41,20 @@ export default {
 		submit() {
 			this.$axios({
 				method: 'post',
-				url:'/register',
+				url:'/signup',
 				data: JSON.stringify({
 					username: this.username,
 					password: this.password,
 					confirm_password: this.confirm_password
 				})
-			}).then((response)=>{
-				console.log(response.data);
-				if (response.code == 1000) {
-					console.log('success')
-				}
+			}).then((res)=>{
+				console.log(res.data);
+				if (res.code == 1000) {
+          console.log('signup success');
+          this.$router.push({ name: "Login" });
+				}else{
+          console.log(res.message);
+        }
 			}).catch((error)=>{
 				console.log(error)
 			})

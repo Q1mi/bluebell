@@ -41,14 +41,14 @@ export default {
 					username: this.username,
 					password: this.password
 				})
-			}).then((response)=>{
-				console.log(response.data)
-				if (response.code == 1000) {
-          window.localStorage.setItem('bluebellToken', response.data.token);
-          this.$store.commit("login", {userID: response.data.userID, userName: response.data.userName});
+			}).then((res)=>{
+				console.log(res.data)
+				if (res.code == 1000) {
+          localStorage.setItem("loginResult", JSON.stringify(res.data));
+          this.$store.commit("login", res.data);
           this.$router.push({path: this.redirect || '/' })
 				} else {
-					console.log(response.message)
+					console.log(res.message)
 				}
 			}).catch((error)=>{
 				console.log(error)

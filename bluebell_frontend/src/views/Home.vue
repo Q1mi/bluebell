@@ -77,11 +77,14 @@
           </div>
           <div class="l-container">
             <h4 class="con-title">
-              Miner's Mettle, our artillery-based strategy game, arrives on Steam April 22nd! Please
-              check it out and
-              consider wishlisting, it's very helpful for us!
+              牛津经济研究院：随着日本贫困人口增多 该国中产阶级正在消失
             </h4>
-            <div class="con-cover"></div>
+            <div class="con-memo">
+              <p>
+                最近，牛津经济研究院经济学家Shigeto Nagai发布了一份报告。这位经济学家在报告中表示，随着日本贫困人口的增加，该国的中产阶级正在慢慢消失。
+              </p>
+            </div>
+            <!-- <div class="con-cover"></div> -->
             <div class="user-btn">
               <span class="btn-item">
                 <i class="iconfont icon-comment"></i>comment
@@ -94,19 +97,89 @@
             <a class>
               <span class="iconfont icon-up"></span>
             </a>
+            <span class="text">80</span>
+            <a class>
+              <span class="iconfont icon-down"></span>
+            </a>
+          </div>
+          <div class="l-container">
+            <h4 class="con-title">刚刚，瑞幸咖啡董事长陆正耀被免职</h4>
+            <div class="con-memo">
+              <p>
+                瑞幸咖啡于下午召开股东特别大会。据悉，目前该会议已结束。会议投票通过了对陆正耀、黎辉、刘二海及Sean Shao的董事罢免议案。同时会议投票通过了增加Ying Zeng和Jie Yang两名独立董事。
+              </p>
+            </div>
+            <div class="user-btn">
+              <span class="btn-item">
+                <i class="iconfont icon-comment"></i>comment
+              </span>
+            </div>
+          </div>
+        </li>
+         <li class="c-l-item">
+          <div class="post">
+            <a class>
+              <span class="iconfont icon-up"></span>
+            </a>
+            <span class="text">17K</span>
+            <a class>
+              <span class="iconfont icon-down"></span>
+            </a>
+          </div>
+          <div class="l-container">
+            <h4 class="con-title">柯洁发文：将无限期退出新浪微博</h4>
+            <div class="con-memo">
+              <p>
+                7月5日下午，柯洁在其个人微博@棋士柯洁 发文称：从今日起个人无限期退博，谢谢大家一路以来的关注，再见。
+              </p>
+            </div>
+            <div class="user-btn">
+              <span class="btn-item">
+                <i class="iconfont icon-comment"></i>comment
+              </span>
+            </div>
+          </div>
+        </li>
+         <li class="c-l-item">
+          <div class="post">
+            <a class>
+              <span class="iconfont icon-up"></span>
+            </a>
+            <span class="text">79K</span>
+            <a class>
+              <span class="iconfont icon-down"></span>
+            </a>
+          </div>
+          <div class="l-container">
+            <h4 class="con-title">北极 38 度了，我们可能正在经历有史以来最热的一年</h4>
+            <div class="con-memo">
+              <p>
+                夏天的风轻轻吹过，给了这个世界最热情的拥抱，到底有多热？
+                连北极都录得 37.8 ℃ 的高温了。
+              </p>
+            </div>
+            <div class="user-btn">
+              <span class="btn-item">
+                <i class="iconfont icon-comment"></i>comment
+              </span>
+            </div>
+          </div>
+        </li>
+         <li class="c-l-item">
+          <div class="post">
+            <a class>
+              <span class="iconfont icon-up"></span>
+            </a>
             <span class="text">7</span>
             <a class>
               <span class="iconfont icon-down"></span>
             </a>
           </div>
           <div class="l-container">
-            <h4 class="con-title">What's the fastest way you've seen a streamer kill their stream?</h4>
+            <h4 class="con-title">我，一个靠GitHub打赏谋生的码农，年入十万美元</h4>
             <div class="con-memo">
               <p>
-                Obviously stuff like saying the 'n' word doesn't help, but what are some of the
-                biggest mistakes you've seen streamers
-                make over the years? It's usually a lot easier to see what not to do so I'd be
-                interested to hear your thoughts.
+               如果提到靠打赏生活的人，我们首先想到的会是主播。但现实情况是，码农也可以。这位活成主播的码农名叫 Caleb Porzio。
               </p>
             </div>
             <div class="user-btn">
@@ -127,13 +200,10 @@
             </a>
           </div>
           <div class="l-container">
-            <h4 class="con-title">What's the fastest way you've seen a streamer kill their stream?</h4>
+            <h4 class="con-title">车厘子之后，你可能要面对“酸奶自由”</h4>
             <div class="con-memo">
               <p>
-                Obviously stuff like saying the 'n' word doesn't help, but what are some of the
-                biggest mistakes you've seen streamers
-                make over the years? It's usually a lot easier to see what not to do so I'd be
-                interested to hear your thoughts.
+                让你高攀不起的可能只是一瓶酸奶。
               </p>
             </div>
             <div class="user-btn">
