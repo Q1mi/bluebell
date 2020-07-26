@@ -2,11 +2,12 @@
 import axios from 'axios';
 axios.defaults.baseURL = "/api/v1/";
 axios.interceptors.request.use((config) => {
-  const token = localStorage.getItem('bluebellToken')
-    if (token) { 
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
+  let loginResult = JSON.parse(localStorage.getItem("loginResult"));
+  if (loginResult) { 
+	const token = loginResult.accessToken
+	config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 }, (error) => {
 	return Promise.reject(error);
 });

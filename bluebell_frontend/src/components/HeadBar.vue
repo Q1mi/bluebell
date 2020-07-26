@@ -10,8 +10,11 @@
         <a class="login-btn" @click="goLogin">登录</a>
         <a class="login-btn" @click="goSignUp">注册</a>
       </div>
-      <div v-show="isLogin">
+      <div class="user-box" v-show="isLogin">
         <span class="user">{{ currUsername }}</span>
+        <div class="dropdown-content">
+          <a @click="goLogout">登出</a>
+        </div>
       </div>
     </div>
   </header>
@@ -38,6 +41,9 @@ export default {
     },
     goSignUp() {
       this.$router.push({ name: "SignUp" });
+    },
+    goLogout(){
+      this.$store.commit("logout");
     }
   }
 };
@@ -142,6 +148,8 @@ export default {
       display: flex;
       display: -webkit-flex;
       align-items: center;
+      cursor: pointer;
+      padding: 12px 12px 12px 28px;
       &::after {
         content: "";
         width: 0;
@@ -154,6 +162,25 @@ export default {
         margin-left: 10px;
       }
     }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
+      }
+      a:hover {background-color: #f1f1f1}
+    }
+    .user-box:hover .dropdown-content {
+      display: block;
+    }
   }
+  
 }
 </style>

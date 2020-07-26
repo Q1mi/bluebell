@@ -5,7 +5,6 @@ Vue.use(Vuex)
 
 const defaultLoginResult = {
   accessToken:null,
-  refreshToken:null,
   userID:null,
   username:null,
 }
@@ -38,6 +37,5 @@ export default new Vuex.Store({
     userID:state=>state.loginResult.userID,
     username:state=>state.loginResult.username,
     accessToken:state=>state.loginResult.accessToken,
-    refreshToken:state=>state.loginResult.refreshToken,
   }
 })
