@@ -18,11 +18,11 @@ type MyClaims struct {
 
 var mySecret = []byte("夏天夏天悄悄过去")
 
-func keyFunc(token *jwt.Token) (i interface{}, err error) {
+func keyFunc(_ *jwt.Token) (i interface{}, err error) {
 	return mySecret, nil
 }
 
-const TokenExpireDuration = time.Second * 60
+const TokenExpireDuration = time.Hour * 24 * 365
 
 // GenToken 生成access token 和 refresh token
 func GenToken(userID uint64) (aToken, rToken string, err error) {
