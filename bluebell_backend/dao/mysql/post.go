@@ -57,3 +57,14 @@ func GetPostListByIDs(ids []string) (postList []*models.Post, err error) {
 	err = db.Select(&postList, query, args...)
 	return
 }
+
+func GetPostList() (posts []*models.ApiPostDetail, err error) {
+	sqlStr := `select post_id, title, content, author_id, community_id, create_time
+	from post
+	limit 2
+	`
+	posts = make([]*models.ApiPostDetail, 0, 2)
+	err = db.Select(&posts, sqlStr)
+	return
+
+}

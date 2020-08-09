@@ -55,6 +55,16 @@ func PostListHandler(c *gin.Context) {
 	ResponseSuccess(c, posts)
 }
 
+func PostList2Handler(c *gin.Context) {
+	data, err := logic.GetPostList2()
+	if err != nil {
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, data)
+
+}
+
 // PostDetailHandler 帖子详情
 func PostDetailHandler(c *gin.Context) {
 	postId := c.Param("id")

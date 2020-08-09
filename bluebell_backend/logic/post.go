@@ -61,3 +61,28 @@ func GetPost(postID string) (post *models.ApiPostDetail, err error) {
 	post.CommunityName = community.CommunityName
 	return post, nil
 }
+
+func GetPostList2() (data []*models.ApiPostDetail, err error) {
+	postList, err := mysql.GetPostList()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	data = make([]*models.ApiPostDetail, 0, len(postList))
+	for _, post := range postList {
+		user, err := mysql.GetUserByID(fmt.Sprint(post.AuthorId))
+		if err != nil {
+			zap.L().Error("mysql.GetUserByID() failed", zap.String("author_id", fmt.Sprint(post.AuthorId)), zap.Error(err))
+			continue
+		}
+		post.AuthorName = user.UserName
+		community, err := mysql.GetCommunityByID(fmt.Sprint(post.CommunityID))
+		if err != nil {
+			zap.L().Error("mysql.GetCommunityByID() failed", zap.String("community_id", fmt.Sprint(post.CommunityID)), zap.Error(err))
+			continue
+		}
+		post.CommunityName = community.CommunityName
+		data = append(data, post)
+	}
+	return
+}
