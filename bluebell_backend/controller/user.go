@@ -9,9 +9,8 @@ import (
 	"net/http"
 	"strings"
 
-	"go.uber.org/zap"
-
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 func SignUpHandler(c *gin.Context) {

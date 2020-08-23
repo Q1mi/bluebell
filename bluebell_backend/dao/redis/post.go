@@ -13,6 +13,13 @@ const (
 	PostPerAge               = 20
 )
 
+/*
+投票算法：http://www.ruanyifeng.com/blog/2012/03/ranking_algorithm_reddit.html
+
+
+
+*/
+
 /* PostVote 为帖子投票
 投票分为四种情况：1.投赞成票 2.投反对票 3.取消投票 4.反转投票
 
@@ -36,8 +43,9 @@ func PostVote(postID, userID string, v float64) (err error) {
 		// 不允许投票了
 		return ErrorVoteTimeExpire
 	}
+	// 判断是否已经投过票
 	key := KeyPostVotedZSetPrefix + postID
-	ov := client.ZScore(key, userID).Val()
+	ov := client.ZScore(key, userID).Val() // 获取当前分数
 
 	diffAbs := math.Abs(ov - v)
 	pipeline := client.TxPipeline()
@@ -46,17 +54,24 @@ func PostVote(postID, userID string, v float64) (err error) {
 		Member: userID,
 	})
 	pipeline.ZIncrBy(KeyPostScoreZSet, VoteScore*diffAbs*v, postID) // 更新分数
+
 	switch math.Abs(ov) - math.Abs(v) {
 	case 1:
 		// 取消投票 ov=1/-1 v=0
+		// 投票数-1
 		pipeline.HIncrBy(KeyPostInfoHashPrefix+postID, "votes", -1)
 	case 0:
 		// 反转投票 ov=-1/1 v=1/-1
+		// 投票数不用更新
 	case -1:
 		// 新增投票 ov=0 v=1/-1
+		// 投票数+1
 		pipeline.HIncrBy(KeyPostInfoHashPrefix+postID, "votes", 1)
+	default:
+		// 已经投过票了
+		return ErrorVoted
 	}
-
+	_, err = pipeline.Exec()
 	return
 }
 
