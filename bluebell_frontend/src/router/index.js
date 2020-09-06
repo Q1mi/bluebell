@@ -18,7 +18,7 @@ Vue.use(VueRouter)
     component: Home
   },
   {
-    path: '/content',
+    path: '/post/:id',
     name: 'Content',
     component: Content
   },

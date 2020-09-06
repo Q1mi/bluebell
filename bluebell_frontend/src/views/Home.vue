@@ -3,214 +3,46 @@
     <div class="left">
       <!-- <h4 class="c-l-title">热门帖子</h4> -->
       <div class="c-l-header">
-        <span class="hot btn-iconfont">
-          <i class="iconfont icon-hot"></i>
-          Hot
-        </span>
-        <div class="new btn-iconfont">
+        <div class="new btn-iconfont"
+        :class="{ active: timeOrder }"
+        @click="selectOrder('time')"
+        >
           <i class="iconfont icon-polygonred"></i>New
         </div>
-        <div class="top btn-iconfont">
-          <i class="iconfont icon-top"></i>Top
+        <div class="top btn-iconfont"
+         :class="{ active: scoreOrder }"
+         @click="selectOrder('score')"
+        >
+          <i class="iconfont icon-top"></i>Score
         </div>
+        <button class="btn-publish" @click="goPublish">发表</button>
       </div>
       <ul class="c-l-list">
-        <li class="c-l-item" v-for="post in postList" :key="post.id">
+        <li class="c-l-item"  v-for="post in postList" :key="post.id">
           <div class="post">
             <a class="vote">
-              <span class="iconfont icon-up"></span>
+              <span class="iconfont icon-up"
+              @click="vote(post.id, '1')"
+              ></span>
             </a>
-            <span class="text">{{post.votes}}</span>
+            <span class="text">{{post.vote_num}}</span>
             <a class="vote">
-              <span class="iconfont icon-down"></span>
+              <span class="iconfont icon-down"
+              @click="vote(post.id, '-1')"
+              ></span>
             </a>
           </div>
-          <div class="l-container">
+          <div class="l-container" @click="goDetail(post.id)">
             <h4 class="con-title">{{post.title}}</h4>
             <div class="con-memo">
-              <p>{{post.summary}}</p>
+              <p>{{post.content}}</p>
             </div>
-            <div class="user-btn">
+            <!-- <div class="user-btn">
               <span class="btn-item">
                 <i class="iconfont icon-comment"></i>
                 <span>{{post.comments}} comments</span>
               </span>
-            </div>
-          </div>
-        </li>
-        <li class="c-l-item">
-          <div class="post">
-            <a class>
-              <span class="iconfont icon-up"></span>
-            </a>
-            <span class="text">107</span>
-            <a class>
-              <span class="iconfont icon-down"></span>
-            </a>
-          </div>
-          <div class="l-container">
-            <h4 class="con-title">What's the fastest way you've seen a streamer kill their stream?</h4>
-            <div class="con-memo">
-              <p>
-                Obviously stuff like saying the 'n' word doesn't help, but what are some of the
-                biggest mistakes you've seen streamers
-                make over the years? It's usually a lot easier to see what not to do so I'd be
-                interested to hear your thoughts.
-              </p>
-            </div>
-            <div class="user-btn">
-              <span class="btn-item">
-                <i class="iconfont icon-comment"></i>comment
-              </span>
-            </div>
-          </div>
-        </li>
-        <li class="c-l-item">
-          <div class="post">
-            <a class="vote">
-              <span class="iconfont icon-up"></span>
-            </a>
-            <span class="text">50</span>
-            <a class="vote">
-              <span class="iconfont icon-down"></span>
-            </a>
-          </div>
-          <div class="l-container">
-            <h4 class="con-title">
-              牛津经济研究院：随着日本贫困人口增多 该国中产阶级正在消失
-            </h4>
-            <div class="con-memo">
-              <p>
-                最近，牛津经济研究院经济学家Shigeto Nagai发布了一份报告。这位经济学家在报告中表示，随着日本贫困人口的增加，该国的中产阶级正在慢慢消失。
-              </p>
-            </div>
-            <!-- <div class="con-cover"></div> -->
-            <div class="user-btn">
-              <span class="btn-item">
-                <i class="iconfont icon-comment"></i>comment
-              </span>
-            </div>
-          </div>
-        </li>
-        <li class="c-l-item">
-          <div class="post">
-            <a class>
-              <span class="iconfont icon-up"></span>
-            </a>
-            <span class="text">80</span>
-            <a class>
-              <span class="iconfont icon-down"></span>
-            </a>
-          </div>
-          <div class="l-container">
-            <h4 class="con-title">刚刚，瑞幸咖啡董事长陆正耀被免职</h4>
-            <div class="con-memo">
-              <p>
-                瑞幸咖啡于下午召开股东特别大会。据悉，目前该会议已结束。会议投票通过了对陆正耀、黎辉、刘二海及Sean Shao的董事罢免议案。同时会议投票通过了增加Ying Zeng和Jie Yang两名独立董事。
-              </p>
-            </div>
-            <div class="user-btn">
-              <span class="btn-item">
-                <i class="iconfont icon-comment"></i>comment
-              </span>
-            </div>
-          </div>
-        </li>
-         <li class="c-l-item">
-          <div class="post">
-            <a class>
-              <span class="iconfont icon-up"></span>
-            </a>
-            <span class="text">17K</span>
-            <a class>
-              <span class="iconfont icon-down"></span>
-            </a>
-          </div>
-          <div class="l-container">
-            <h4 class="con-title">柯洁发文：将无限期退出新浪微博</h4>
-            <div class="con-memo">
-              <p>
-                7月5日下午，柯洁在其个人微博@棋士柯洁 发文称：从今日起个人无限期退博，谢谢大家一路以来的关注，再见。
-              </p>
-            </div>
-            <div class="user-btn">
-              <span class="btn-item">
-                <i class="iconfont icon-comment"></i>comment
-              </span>
-            </div>
-          </div>
-        </li>
-         <li class="c-l-item">
-          <div class="post">
-            <a class>
-              <span class="iconfont icon-up"></span>
-            </a>
-            <span class="text">79K</span>
-            <a class>
-              <span class="iconfont icon-down"></span>
-            </a>
-          </div>
-          <div class="l-container">
-            <h4 class="con-title">北极 38 度了，我们可能正在经历有史以来最热的一年</h4>
-            <div class="con-memo">
-              <p>
-                夏天的风轻轻吹过，给了这个世界最热情的拥抱，到底有多热？
-                连北极都录得 37.8 ℃ 的高温了。
-              </p>
-            </div>
-            <div class="user-btn">
-              <span class="btn-item">
-                <i class="iconfont icon-comment"></i>comment
-              </span>
-            </div>
-          </div>
-        </li>
-         <li class="c-l-item">
-          <div class="post">
-            <a class>
-              <span class="iconfont icon-up"></span>
-            </a>
-            <span class="text">7</span>
-            <a class>
-              <span class="iconfont icon-down"></span>
-            </a>
-          </div>
-          <div class="l-container">
-            <h4 class="con-title">我，一个靠GitHub打赏谋生的码农，年入十万美元</h4>
-            <div class="con-memo">
-              <p>
-               如果提到靠打赏生活的人，我们首先想到的会是主播。但现实情况是，码农也可以。这位活成主播的码农名叫 Caleb Porzio。
-              </p>
-            </div>
-            <div class="user-btn">
-              <span class="btn-item">
-                <i class="iconfont icon-comment"></i>comment
-              </span>
-            </div>
-          </div>
-        </li>
-        <li class="c-l-item">
-          <div class="post">
-            <a class>
-              <span class="iconfont icon-up"></span>
-            </a>
-            <span class="text">1.7k</span>
-            <a class>
-              <span class="iconfont icon-down"></span>
-            </a>
-          </div>
-          <div class="l-container">
-            <h4 class="con-title">车厘子之后，你可能要面对“酸奶自由”</h4>
-            <div class="con-memo">
-              <p>
-                让你高攀不起的可能只是一瓶酸奶。
-              </p>
-            </div>
-            <div class="user-btn">
-              <span class="btn-item">
-                <i class="iconfont icon-comment"></i>comment
-              </span>
-            </div>
+            </div> -->
           </div>
         </li>
       </ul>
@@ -284,25 +116,57 @@ export default {
   components: {},
   data() {
     return {
+      order: "time",
       page: 1,
       postList: []
     };
   },
   methods: {
+    selectOrder(order){
+      this.order = order;
+      this.getPostList()
+    },
+    goPublish(){
+      this.$router.push({ name: "Publish" });
+    },
+    goDetail(id){
+      this.$router.push({ name: "Content", params: { id: id }});
+    },
     getPostList() {
       this.$axios({
         method: "get",
-        url: "/post",
-        data: JSON.stringify({
-          page: this.page
-        })
+        url: "/posts2",
+        params: {
+          page: this.page,
+          order: this.order,
+        }
       })
         .then(response => {
-          console.log(response.data);
+          console.log(response.data, 222);
           if (response.code == 1000) {
             this.postList = response.data;
           } else {
-            console.log(response.message);
+            console.log(response.msg);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    vote(post_id, direction){
+      this.$axios({
+        method: "post",
+        url: "/vote",
+        data: JSON.stringify({
+          post_id: post_id,
+          direction: direction,
+        })
+      })
+        .then(response => {
+          if (response.code == 1000) {
+            console.log("vote success");
+          } else {
+            console.log(response.msg);
           }
         })
         .catch(error => {
@@ -312,6 +176,14 @@ export default {
   },
   mounted: function() {
     this.getPostList();
+  },
+  computed:{
+    timeOrder(){
+      return this.order == "time";
+    },
+    scoreOrder(){
+      return this.order == "score";
+    }
   }
 };
 </script>
@@ -358,7 +230,7 @@ export default {
         display: flex;
         display: -webkit-flex;
       }
-      .hot {
+      .active {
         background: #f6f7f8;
         color: #0079d3;
         fill: #0079d3;
@@ -374,6 +246,19 @@ export default {
       }
       .top {
         font-size: 14px;
+      }
+      .btn-publish {
+        width: 64px;
+        height: 32px;
+        line-height: 32px;
+        background-color: #54b351;
+        color: #ffffff;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        box-sizing: border-box;
+        text-align: center;
+        margin-left: auto;
+        cursor: pointer;
       }
       .sort {
         margin-left: 300px;

@@ -12,10 +12,8 @@
           </a>
         </div>
         <div class="l-container">
-          <h4
-            class="con-title"
-          >Miner's Mettle, our artillery-based strategy game, arrives on Steam April 22nd! Please check it out and consider wishlisting, it's very helpful for us!</h4>
-          <div class="con-cover"></div>
+          <h4 class="con-title">{{post.title}}</h4>
+          <div class="con-info">{{post.content}}</div>
           <div class="user-btn">
             <span class="btn-item">
               <i class="iconfont icon-comment"></i>comment
@@ -24,13 +22,13 @@
         </div>
       </div>
 
-      <div class="comment">
+      <!-- <div class="comment">
         <div class="c-left">
           <div class="line"></div>
-          <!-- <div class="c-arrow">
+          <div class="c-arrow">
                             <a class="vote"><span class="iconfont icon-up"></span></a>
                             <a class="up down"></a>
-          </div>-->
+          </div>
         </div>
         <div class="c-right">
           <div class="c-user-info">
@@ -42,14 +40,14 @@
             class="c-content"
           >We're having the same experience in Yerevan, Armenia. Though you can see mountains all around the city on good days, now you can see even farther into Turkey and Iran. Every crag on the mountains around us is now clearer than ever.</p>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="right">
       <div class="topic-info">
         <h5 class="t-header"></h5>
         <div class="t-info">
           <a class="avatar"></a>
-          <span class="topic-name">b/tree_hole</span>
+          <span class="topic-name">b/{{post.community_name}}</span>
         </div>
         <p class="t-desc">树洞 树洞 无限树洞的树洞</p>
         <ul class="t-num">
@@ -71,7 +69,34 @@
 
 <script>
 export default {
-  name: "Content"
+  name: "Content",
+  data(){
+    return {
+      post:{},
+    }
+  },
+  methods:{
+    getPostDetail() {
+      this.$axios({
+        method: "get",
+        url: "/post/"+ this.$route.params.id,
+      })
+        .then(response => {
+          console.log(1, response.data);
+          if (response.code == 1000) {
+            this.post = response.data;
+          } else {
+            console.log(response.msg);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+  },
+  mounted: function() {
+    this.getPostDetail();
+  }
 };
 </script>
 
@@ -135,6 +160,11 @@ export default {
           line-height: 22px;
           text-decoration: none;
           word-break: break-word;
+        }
+        .con-info{
+          margin: 25px 0;
+          padding: 15px 0;
+          border-bottom: 1px solid grey;
         }
         .con-cover {
           height: 512px;

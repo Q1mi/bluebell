@@ -53,7 +53,7 @@ export default {
           console.log('signup success');
           this.$router.push({ name: "Login" });
 				}else{
-          console.log(res.message);
+          console.log(res.msg);
         }
 			}).catch((error)=>{
 				console.log(error)

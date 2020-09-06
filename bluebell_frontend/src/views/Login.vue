@@ -48,7 +48,7 @@ export default {
           this.$store.commit("login", res.data);
           this.$router.push({path: this.redirect || '/' })
 				} else {
-					console.log(res.message)
+					console.log(res.msg)
 				}
 			}).catch((error)=>{
 				console.log(error)

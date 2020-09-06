@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-      <span class="logo">bluebell</span>
+      <span class="logo" @click="goIndex">bluebell</span>
     <div class="search">
       <label class="s-logo"></label>
       <input type="text" class="s-input" placeholder="搜索" />
@@ -36,6 +36,9 @@ export default {
     }
   },
   methods: {
+    goIndex(){
+      this.$router.push({ name: "Home" });
+    },
     goLogin() {
       this.$router.push({ name: "Login" });
     },
@@ -71,6 +74,7 @@ export default {
     line-height: 32px;
     flex-grow: 0;
     margin-right: 16px;
+    cursor: pointer;
   }
   .search {
     flex-grow: 1;

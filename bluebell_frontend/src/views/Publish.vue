@@ -93,7 +93,7 @@ export default {
           if (response.code == 1000) {
             this.$router.push({ path: this.redirect || "/" });
           } else {
-            console.log(response.message);
+            console.log(response.msg);
           }
         })
         .catch(error => {
@@ -110,7 +110,7 @@ export default {
           if (response.code == 1000) {
             this.communityList = response.data;
           } else {
-            console.log(response.message);
+            console.log(response.msg);
           }
         })
         .catch(error => {

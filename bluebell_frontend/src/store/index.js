@@ -4,9 +4,9 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const defaultLoginResult = {
-  accessToken:null,
-  userID:null,
-  username:null,
+  token:null,
+  user_id:null,
+  user_name:null,
 }
 
 export default new Vuex.Store({
@@ -33,9 +33,9 @@ export default new Vuex.Store({
   actions: {
   },
   getters: {
-    isLogin:state=>state.loginResult.userID !== null,
-    userID:state=>state.loginResult.userID,
-    username:state=>state.loginResult.username,
-    accessToken:state=>state.loginResult.accessToken,
+    isLogin:state=>state.loginResult.user_id !== null,
+    userID:state=>state.loginResult.user_id,
+    username:state=>state.loginResult.user_name,
+    accessToken:state=>state.loginResult.token,
   }
 })
