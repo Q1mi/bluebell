@@ -25,7 +25,8 @@ Vue.use(VueRouter)
   {
     path: '/publish',
     name: 'Publish',
-    component: Publish
+    component: Publish,
+    meta: { requireAuth: true }
   },
   {
     path: '/login',
