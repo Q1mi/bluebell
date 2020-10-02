@@ -31,11 +31,11 @@ COPY ./conf /conf
 
 # 从builder镜像中把可执行文件拷贝到当前目录
 COPY --from=builder /build/bluebell /
+COPY ./sources.list /etc/apt/
 
 RUN set -eux \
     && apt-get update \
-    && apt-get install -y --no-install-recommends \
-    && netcat \
+    && apt-get install -y --no-install-recommends --allow-unauthenticated netcat \
     && chmod 755 wait-for.sh
 
 # 需要运行的命令
