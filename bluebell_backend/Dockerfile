@@ -34,8 +34,7 @@ COPY --from=builder /build/bluebell /
 
 RUN set -eux \
     && apt-get update \
-    && apt-get install -y --no-install-recommends \
-    && netcat \
+    && apt-get install -y --no-install-recommends netcat \
     && chmod 755 wait-for.sh
 
 # 需要运行的命令
