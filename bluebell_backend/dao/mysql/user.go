@@ -13,7 +13,7 @@ const secret = "liwenzhou.com"
 func encryptPassword(data []byte) (result string) {
 	h := md5.New()
 	h.Write([]byte(secret))
-	h.Write(data))
+	h.Write(data)
 	return hex.EncodeToString(h.Sum(nil))
 }
 
