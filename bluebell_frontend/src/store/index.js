@@ -33,9 +33,9 @@ export default new Vuex.Store({
   actions: {
   },
   getters: {
-    isLogin:state=>state.loginResult.user_id !== null,
-    userID:state=>state.loginResult.user_id,
-    username:state=>state.loginResult.user_name,
-    accessToken:state=>state.loginResult.token,
+    isLogin:state=>(state.loginResult.user_id !== null) || (state.loginResult.userID != null),
+    userID:state=>state.loginResult.user_id || state.loginResult.userID,
+    username:state=>state.loginResult.user_name || state.loginResult.username,
+    accessToken:state=>state.loginResult.token || state.loginResult.accessToken,
   }
 })
